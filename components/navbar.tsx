@@ -5,14 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 interface NavLink {
   title: string;
   href: string;
 }
-
-// ─── Constants (defined outside component to avoid re-creation on re-renders) ──
 
 const NAV_LINKS: NavLink[] = [
   { title: "Home", href: "/" },
@@ -28,19 +24,15 @@ const HOVER_SPRING = {
   mass: 0.6,
 };
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
 const NavLogo = React.memo(function NavLogo() {
   return (
     <Link href="/" className="font-bold text-2xl tracking-tight select-none">
-      Logo
+      Acme
     </Link>
   );
 });
 
 NavLogo.displayName = "NavLogo";
-
-// ─── NavItem ──────────────────────────────────────────────────────────────────
 
 interface NavItemProps {
   link: NavLink;
@@ -67,7 +59,6 @@ const NavItem = React.memo(function NavItem({
       onMouseLeave={onMouseLeave}
       aria-current={isActive ? "page" : undefined}
     >
-      {/* Active indicator (always mounted, lower z-index) */}
       {isActive && (
         <motion.div
           layoutId="active"
@@ -76,7 +67,6 @@ const NavItem = React.memo(function NavItem({
         />
       )}
 
-      {/* Hover indicator */}
       <AnimatePresence>
         {isHovered && (
           <motion.div
@@ -99,13 +89,10 @@ const NavItem = React.memo(function NavItem({
 
 NavItem.displayName = "NavItem";
 
-// ─── Main Navbar ──────────────────────────────────────────────────────────────
-
 const Navbar = () => {
   const [hoveredLink, setHoveredLink] = useState<number | null>(null);
   const pathname = usePathname();
 
-  // Stable callbacks — won't cause child re-renders
   const handleMouseEnter = useCallback((idx: number) => {
     setHoveredLink(idx);
   }, []);
@@ -114,10 +101,9 @@ const Navbar = () => {
     setHoveredLink(null);
   }, []);
 
-  // Derive active index from current pathname
   const activeIdx = useMemo(
     () => NAV_LINKS.findIndex((link) => link.href === pathname),
-    [pathname]
+    [pathname],
   );
 
   return (
@@ -128,9 +114,7 @@ const Navbar = () => {
         aria-label="Main navigation"
       >
         <div className="flex justify-between items-center">
-          {/* Logo */}
           <NavLogo />
-
           {/* Nav Links Pill */}
           <div
             className="flex items-center border-2 border-neutral-600 text-sm rounded-full bg-white p-1 text-black gap-1"
