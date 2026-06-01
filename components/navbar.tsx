@@ -4,6 +4,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
+import { Menu } from 'lucide-react';
 
 interface NavLink {
   title: string;
@@ -14,6 +15,7 @@ const NAV_LINKS: NavLink[] = [
   { title: "Home", href: "/" },
   { title: "About", href: "/about" },
   { title: "Services", href: "/services" },
+  { title: "Portfolio", href: "/portfolio" },
   { title: "Contact", href: "/contact" },
 ];
 
@@ -27,7 +29,7 @@ const HOVER_SPRING = {
 const NavLogo = React.memo(function NavLogo() {
   return (
     <Link href="/" className="font-bold text-2xl tracking-tight select-none">
-      Acme
+      Intractive
     </Link>
   );
 });
@@ -62,7 +64,7 @@ const NavItem = React.memo(function NavItem({
       {isActive && (
         <motion.div
           layoutId="active"
-          className="absolute inset-0 bg-black/10 rounded-full"
+          className="absolute inset-0 bg-black rounded-full"
           transition={HOVER_SPRING}
         />
       )}
@@ -89,8 +91,96 @@ const NavItem = React.memo(function NavItem({
 
 NavItem.displayName = "NavItem";
 
+interface MobileMenuProps {
+  isOpen: boolean;
+  onClose: () => void;
+  navLinks: NavLink[];
+  activeIdx: number;
+}
+
+const MobileMenu = React.memo(function MobileMenu({
+  isOpen,
+  onClose,
+  navLinks,
+  activeIdx,
+}: MobileMenuProps) {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2 }}
+          className="md:hidden bg-white border border-neutral-200 rounded-lg mt-2"
+        >
+          <div className="flex flex-col">
+            {navLinks.map((link, idx) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={onClose}
+                className={`px-4 py-2 text-sm font-medium ${
+                  activeIdx === idx
+                    ? "bg-black text-white"
+                    : "text-neutral-800 hover:bg-neutral-100"
+                }`}
+              >
+                {link.title}
+              </Link>
+            ))}
+          </div>
+          <div className="flex  gap-2 p-4 border-t border-neutral-200">
+            <button
+              type="button"
+              className="border text-sm font-medium rounded-full px-4 py-1.5 text-neutral-600 bg-neutral-50 hover:bg-neutral-100 transition-colors duration-150"
+            >
+              Sign Up
+            </button>
+            <button
+              type="button"
+              className="border text-sm font-medium rounded-full bg-neutral-800 px-4 py-1.5 text-white hover:bg-neutral-700 transition-colors duration-150"
+            >
+              Login
+            </button>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+});
+
+MobileMenu.displayName = "MobileMenu";
+
+
+
+const MenuToggle = ({
+  setIsMobileMenuOpen,
+  isMobileMenuOpen,
+}: {
+  setIsMobileMenuOpen: (isOpen: boolean) => void;
+  isMobileMenuOpen: boolean;
+}) => {
+  return (
+    <div className="flex items-center md:hidden">
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="p-2 rounded-lg border border-neutral-400/50 hover:bg-neutral-50"
+        aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+      >
+        {/* Hamburger Icon */}
+        <Menu size={16} />
+      </button>
+    </div>
+  );
+};
+
+MenuToggle.displayName = "MobileToggle";
+
+
 const Navbar = () => {
   const [hoveredLink, setHoveredLink] = useState<number | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   const handleMouseEnter = useCallback((idx: number) => {
@@ -107,17 +197,18 @@ const Navbar = () => {
   );
 
   return (
-    <header className="w-full max-w-5xl mx-auto" role="banner">
+    <header className="w-full " role="banner">
       <nav
-        className="container px-5 py-4"
+        className="container px-5 py-4 max-w-7xl mx-auto "
         role="navigation"
         aria-label="Main navigation"
       >
         <div className="flex justify-between items-center">
           <NavLogo />
+
           {/* Nav Links Pill */}
           <div
-            className="flex items-center border-2 border-neutral-600 text-sm rounded-full bg-white p-1 text-black gap-1"
+            className="hidden md:flex items-center border-2 border-neutral-600 text-sm rounded-full bg-white p-1 text-black gap-1"
             role="menubar"
           >
             {NAV_LINKS.map((link, idx) => (
@@ -134,21 +225,35 @@ const Navbar = () => {
           </div>
 
           {/* Auth Buttons */}
-          <div className="flex gap-2">
+          <div className="hidden md:flex gap-2">
             <button
               type="button"
-              className="border text-xs font-medium rounded-full px-4 py-1.5 text-neutral-600 bg-neutral-50 hover:bg-neutral-100 transition-colors duration-150"
+              className="border text-sm font-medium rounded-full px-4 py-1.5 text-neutral-600 bg-neutral-50 hover:bg-neutral-100 transition-colors duration-150"
             >
               Sign Up
             </button>
             <button
               type="button"
-              className="border text-xs font-medium rounded-full bg-neutral-800 px-4 py-1.5 text-white hover:bg-neutral-700 transition-colors duration-150"
+              className="border text-sm font-medium rounded-full bg-neutral-800 px-4 py-1.5 text-white hover:bg-neutral-700 transition-colors duration-150"
             >
               Login
             </button>
           </div>
+
+          {/* Mobile View: Hamburger Menu */}
+          <MenuToggle
+            isMobileMenuOpen={isMobileMenuOpen}
+            setIsMobileMenuOpen={setIsMobileMenuOpen}
+          />
         </div>
+
+        {/* Mobile Menu */}
+        <MobileMenu
+          isOpen={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+          navLinks={NAV_LINKS}
+          activeIdx={activeIdx}
+        />
       </nav>
     </header>
   );
