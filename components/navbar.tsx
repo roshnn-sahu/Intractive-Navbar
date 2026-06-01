@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu } from 'lucide-react';
+import { Menu } from "lucide-react";
 
 interface NavLink {
   title: string;
@@ -28,7 +28,7 @@ const HOVER_SPRING = {
 
 const NavLogo = React.memo(function NavLogo() {
   return (
-    <Link href="/" className="font-bold text-2xl tracking-tight select-none">
+    <Link href="/" className="text-2xl font-bold tracking-tight select-none">
       Intractive
     </Link>
   );
@@ -56,7 +56,7 @@ const NavItem = React.memo(function NavItem({
   return (
     <Link
       href={link.href}
-      className="relative text-center px-4 py-1 rounded-full"
+      className="relative rounded-full px-4 py-1 text-center"
       onMouseEnter={() => onMouseEnter(idx)}
       onMouseLeave={onMouseLeave}
       aria-current={isActive ? "page" : undefined}
@@ -64,7 +64,7 @@ const NavItem = React.memo(function NavItem({
       {isActive && (
         <motion.div
           layoutId="active"
-          className="absolute inset-0 bg-black rounded-full"
+          className="absolute inset-0 rounded-full bg-black"
           transition={HOVER_SPRING}
         />
       )}
@@ -73,7 +73,7 @@ const NavItem = React.memo(function NavItem({
         {isHovered && (
           <motion.div
             layoutId="hover"
-            className="absolute inset-0 bg-black w-full h-full rounded-full"
+            className="absolute inset-0 h-full w-full rounded-full bg-black"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -82,7 +82,7 @@ const NavItem = React.memo(function NavItem({
         )}
       </AnimatePresence>
 
-      <span className="relative z-10 mix-blend-difference text-white font-normal">
+      <span className="relative z-10 font-normal text-white mix-blend-difference">
         {link.title}
       </span>
     </Link>
@@ -112,7 +112,7 @@ const MobileMenu = React.memo(function MobileMenu({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
-          className="md:hidden bg-white border border-neutral-200 rounded-lg mt-2"
+          className="mt-2 rounded-lg border border-neutral-200 bg-white md:hidden"
         >
           <div className="flex flex-col">
             {navLinks.map((link, idx) => (
@@ -130,16 +130,16 @@ const MobileMenu = React.memo(function MobileMenu({
               </Link>
             ))}
           </div>
-          <div className="flex  gap-2 p-4 border-t border-neutral-200">
+          <div className="flex flex-col gap-2 border-t border-neutral-200 p-4 sm:flex-row">
             <button
               type="button"
-              className="border text-sm font-medium rounded-full px-4 py-1.5 text-neutral-600 bg-neutral-50 hover:bg-neutral-100 transition-colors duration-150"
+              className="w-full rounded-full border bg-neutral-50 px-4 py-1.5 text-sm font-medium text-neutral-600 transition-colors duration-150 hover:bg-neutral-100"
             >
               Sign Up
             </button>
             <button
               type="button"
-              className="border text-sm font-medium rounded-full bg-neutral-800 px-4 py-1.5 text-white hover:bg-neutral-700 transition-colors duration-150"
+              className="w-full rounded-full border bg-neutral-800 px-4 py-1.5 text-sm font-medium text-white transition-colors duration-150 hover:bg-neutral-700"
             >
               Login
             </button>
@@ -152,8 +152,6 @@ const MobileMenu = React.memo(function MobileMenu({
 
 MobileMenu.displayName = "MobileMenu";
 
-
-
 const MenuToggle = ({
   setIsMobileMenuOpen,
   isMobileMenuOpen,
@@ -165,7 +163,7 @@ const MenuToggle = ({
     <div className="flex items-center md:hidden">
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="p-2 rounded-lg border border-neutral-400/50 hover:bg-neutral-50"
+        className="rounded-lg border border-neutral-400/50 p-2 hover:bg-neutral-50"
         aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
       >
         {/* Hamburger Icon */}
@@ -176,7 +174,6 @@ const MenuToggle = ({
 };
 
 MenuToggle.displayName = "MobileToggle";
-
 
 const Navbar = () => {
   const [hoveredLink, setHoveredLink] = useState<number | null>(null);
@@ -193,22 +190,22 @@ const Navbar = () => {
 
   const activeIdx = useMemo(
     () => NAV_LINKS.findIndex((link) => link.href === pathname),
-    [pathname],
+    [pathname]
   );
 
   return (
-    <header className="w-full " role="banner">
+    <header className="w-full" role="banner">
       <nav
-        className="container px-5 py-4 max-w-7xl mx-auto "
+        className="container mx-auto max-w-7xl px-5 py-4"
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <NavLogo />
 
           {/* Nav Links Pill */}
           <div
-            className="hidden md:flex items-center border-2 border-neutral-600 text-sm rounded-full bg-white p-1 text-black gap-1"
+            className="hidden items-center gap-1 rounded-full border-2 border-neutral-600 bg-white p-1 text-sm text-black md:flex"
             role="menubar"
           >
             {NAV_LINKS.map((link, idx) => (
@@ -225,16 +222,16 @@ const Navbar = () => {
           </div>
 
           {/* Auth Buttons */}
-          <div className="hidden md:flex gap-2">
+          <div className="hidden gap-2 md:flex">
             <button
               type="button"
-              className="border text-sm font-medium rounded-full px-4 py-1.5 text-neutral-600 bg-neutral-50 hover:bg-neutral-100 transition-colors duration-150"
+              className="rounded-full border bg-neutral-50 px-4 py-1.5 text-sm font-medium text-neutral-600 transition-colors duration-150 hover:bg-neutral-100"
             >
               Sign Up
             </button>
             <button
               type="button"
-              className="border text-sm font-medium rounded-full bg-neutral-800 px-4 py-1.5 text-white hover:bg-neutral-700 transition-colors duration-150"
+              className="rounded-full border bg-neutral-800 px-4 py-1.5 text-sm font-medium text-white transition-colors duration-150 hover:bg-neutral-700"
             >
               Login
             </button>
