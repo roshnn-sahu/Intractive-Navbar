@@ -205,7 +205,7 @@ const Navbar = () => {
 
           {/* Nav Links Pill */}
           <div
-            className="hidden items-center gap-1 rounded-full border-2 border-neutral-600 bg-white p-1 text-sm text-black md:flex"
+            className="hidden items-center gap-1 shadow-2xl rounded-full border-2 border-neutral-600 bg-white p-1 text-sm text-black md:flex"
             role="menubar"
           >
             {NAV_LINKS.map((link, idx) => (
