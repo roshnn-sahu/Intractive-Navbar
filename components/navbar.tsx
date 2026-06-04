@@ -227,7 +227,7 @@ const Navbar = ({
     <header className="w-full" role="banner">
       <nav
         className={cn(
-          "mx-auto w-full max-w-7xl border-border/50 bg-background/80 px-4 py-3 backdrop-blur-xl transition-all duration-300",
+          "mx-auto w-full max-w-7xl border-border/50 bg-background/80 px-4 py-3 backdrop-blur-xl transition-all duration-300 dark:bg-muted/50",
           className,
         )}
         role="navigation"
